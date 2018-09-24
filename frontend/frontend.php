@@ -10,7 +10,7 @@
             )
         );
         wp_enqueue_script( 'livechatjs' );
-        $livechatstyle = '<style>
+        echo '<style>
         #lv-input::placeholder, #lv-input-inactive::placeholder {
             color: ' . livechat_option( "fontcolor" ) . ';
         }
@@ -25,7 +25,6 @@
             border-left: 1px solid ' . livechat_option( "backgroundcolor" ) . ';
         }
         </style>';
-        echo apply_filters( 'livechat_show', $livechatstyle );
     });
 
     add_action('wp_footer', function() {
@@ -44,5 +43,4 @@
             show_chat_if_same_user();
             echo '</div>';
         }
-        echo apply_filters( 'livechat_show', $livechat );
     });

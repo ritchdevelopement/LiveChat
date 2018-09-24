@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 class DB_Helper {
 
@@ -7,10 +7,6 @@ class DB_Helper {
 
     private function __construct() {
         $this->db = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-    }
-
-    private function __destruct() {
-        $this->db->close();
     }
 
     public static function getHelper() {
@@ -29,11 +25,12 @@ class DB_Helper {
         $message = substr($_POST["message"], 0, 255);
         $useronline = $_POST["useronline"];
         $usersession = session_id();
+        $userip = get_client_ip_env();
 
         $chatuserEscaped = htmlentities(mysqli_real_escape_string($this->db, $chatuser));
         $messageEscaped = htmlentities(mysqli_real_escape_string($this->db, $message));
 
-        $query = "INSERT INTO wp_livechat (chatuser, message, useronline, usersession) VALUES ('$chatuserEscaped', '$messageEscaped', '$useronline', '$usersession')";
+        $query = "INSERT INTO wp_livechat (chatuser, message, useronline, usersession, userip) VALUES ('$chatuserEscaped', '$messageEscaped', '$useronline', '$usersession', '$userip')";
 
         if ( $this->db->real_query($query) ) {
             echo "Nachricht in Datenbank gespeichert";
@@ -51,24 +48,6 @@ class DB_Helper {
         $query = "SELECT *
         FROM wp_livechat
         WHERE ID > (SELECT ID FROM wp_livechat WHERE useronline = 0 ORDER BY ID DESC LIMIT 1)";
-
-        /* $query = "SELECT *
-            FROM wp_livechat
-            WHERE ID > (
-                SELECT IF ( 
-                (SELECT useronline FROM wp_livechat ORDER BY ID DESC LIMIT 1) = 1,
-                    (SELECT ID 
-                    FROM wp_livechat
-                    WHERE useronline = 0
-                    ORDER BY id DESC LIMIT 0, 1)
-                ,
-                    (SELECT ID 
-                    FROM wp_livechat
-                    WHERE useronline = 0
-                    ORDER BY id DESC LIMIT 1, 1)
-                )
-            )
-            AND ID <= (SELECT ID FROM wp_livechat WHERE useronline = 1 ORDER BY ID DESC LIMIT 1)"; */
 
         if  ( $this->db->real_query($query) ) {
             $res = $this->db->use_result();
@@ -129,7 +108,9 @@ class DB_Helper {
             while ( $row = $res->fetch_assoc() ) {
                 $useronline = $row["useronline"];
                 $usersession = $row["usersession"];
-                if( ( $useronline == 1 && $usersession == session_id() ) || $useronline == 0 ) {
+                $userip = $row["userip"];
+                
+                if( ( $useronline == 1 && $usersession == session_id() && $userip == get_client_ip_env() ) || $useronline == 0 ) {
                    return true;
                 } else {
                     return false;

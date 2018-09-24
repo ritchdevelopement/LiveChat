@@ -15,7 +15,7 @@ class Livechat {
 
     /* Plugin activation */
     function plugin_activation () {
-
+        
         // Create Database on activation
         global $wpdb; 
     
