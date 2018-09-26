@@ -121,7 +121,7 @@ function livechat_communication_form( $args ) {
 
 add_action( 'admin_enqueue_scripts', function ( $hook_suffix ) {
 		$screen = get_current_screen();
-		if ( $screen->id == 'livechat_v1/admin/admin-view') {
+		if ( $screen->id == 'LiveChat/admin/admin-view') {
 			wp_enqueue_style( 'admin-livechat-styles', plugins_url('css/admin-styles.css', __FILE__), array());
 			wp_enqueue_style( 'wp-color-picker' );
 			wp_enqueue_script( 'elc-color-picker', plugins_url('js/colorpicker.js', __FILE__ ), array( 'wp-color-picker' ), false, true );
