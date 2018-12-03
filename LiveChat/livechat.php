@@ -1,19 +1,19 @@
 <?php
 /*
 Plugin Name: LiveChat
-Description: Super duber hyper uber LiveChat
+Description: Ein simpler LiveChat
 Version: 1.0
 Author: Rami El Kudr
 */
 
 if ( !function_exists( 'add_action' ) ) {
-	echo 'NANANANA do not call me directly plsss';
+	echo 'Do not call me directly';
 	exit;
 }
 
 define( 'LIVECHAT_PLUGIN_ADMIN', plugin_dir_path( __FILE__ ) . 'admin/' );
-define( 'LIVECHAT_PLUGIN_FRONTEND', plugin_dir_path( __FILE__ ) . 'frontend/' );
-define( 'LIVECHAT_PLUGIN_INCLUDE', plugin_dir_path( __FILE__ ) . 'include/' );
+define( 'LIVECHAT_PLUGIN_FRONTEND', plugin_dir_path( __FILE__ ) . 'public/' );
+define( 'LIVECHAT_PLUGIN_INCLUDE', plugin_dir_path( __FILE__ ) . 'includes/' );
 
 register_activation_hook( __FILE__ , array( 'Livechat', 'plugin_activation' ) );
 register_deactivation_hook( __FILE__ , array( 'Livechat', 'plugin_deactivation' ) );
@@ -29,5 +29,5 @@ add_action( 'wp_ajax_nopriv_writeMessage', array('Livechat', 'writeMessage' ) );
 add_action( 'wp_ajax_writeMessage', array('Livechat', 'writeMessage' ) );
 add_action( 'wp_ajax_nopriv_readMessages',  array('Livechat', 'readMessages' ) );
 add_action( 'wp_ajax_readMessages',  array('Livechat', 'readMessages' ) );
-add_action( 'wp_ajax_clearDatabase',  array('Livechat', 'clearDatabase' ) );
+add_action( 'wp_ajax_endChat',  array('Livechat', 'endChat' ) );
 add_action( 'wp_ajax_checkUserOnline',  array('Livechat', 'checkUserOnline' ) );

@@ -80,10 +80,10 @@ function livechat_options_form ( $args ) {
 				</td>
 			</tr>
 			<tr>
-				<th scope="row">Datenbankoptionen</th>
+				<th scope="row">Chatsteuerung</th>
 				<td>
-					<input id="db-clear" class="button button-primary" value="Chatverlauf leeren" type="button">
-					<p class="description">ACHTUNG: Damit leeren Sie die Datenbank</p>
+					<input id="chat-end" class="button button-primary" value="Chat beenden" type="button">
+					<p class="description">Damit beenden Sie den laufenden Chat</p>
 				</td>
 			</tr>
 		</tbody>

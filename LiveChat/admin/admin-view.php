@@ -20,8 +20,6 @@
 		</form>
 		<hr>
 		<?php 
-			settings_fields( 'livechat_c' );
 			do_settings_sections( 'livechat_c' );
 		?>
-		
 	</div>

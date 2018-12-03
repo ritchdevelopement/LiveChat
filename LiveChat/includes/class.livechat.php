@@ -9,7 +9,7 @@ class Livechat {
         if ( is_admin() ) {
             include LIVECHAT_PLUGIN_ADMIN . 'admin.php';
         } else {
-            include LIVECHAT_PLUGIN_FRONTEND . 'frontend.php';
+            include LIVECHAT_PLUGIN_FRONTEND . 'public.php';
         }
     }
 
@@ -26,19 +26,21 @@ class Livechat {
         $sql = "CREATE TABLE $table_name (
             id INTEGER NOT NULL AUTO_INCREMENT,
             time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            message VARCHAR(255) NOT NULL DEFAULT 'NULL',
-            chatuser VARCHAR(32) NOT NULL DEFAULT 'NULL',
+            message TEXT NOT NULL DEFAULT '',
+            chatuser VARCHAR(32) NOT NULL,
             useronline TINYINT NOT NULL,
             usersession VARCHAR(50) NOT NULL,
-            userip VARCHAR(50) NOT NULL,
+            userip VARCHAR(128) NOT NULL,
             PRIMARY KEY  (id)
         ) $charset_collate;";
 
-        $sqlInit = "INSERT INTO $table_name (id, message, chatuser, useronline) VALUES (1, '', 'Visitor', 0)";
+        $sqlInit = "INSERT INTO $table_name (id, message, chatuser, useronline) VALUES (1, '', '', 0)";
 
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
         dbDelta( $sql );
         dbDelta( $sqlInit );
+
+        
      }
 
     /* Plugin deactivation */
@@ -56,8 +58,8 @@ class Livechat {
         wp_die();
     }
 
-    function clearDatabase() {
-        DB_Helper::getHelper()->clearDatabase();
+    function endChat() {
+        DB_Helper::getHelper()->endChat();
         wp_die();
     }
 

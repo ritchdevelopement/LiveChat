@@ -47,7 +47,7 @@ function get_client_ip_env() {
 //Show chat if same user
 function show_chat_if_same_user() {
     $sameUser = DB_Helper::getHelper()->checkUserSame();
-
+    
     if($sameUser == true) {
         echo '<div id="lv-body">
                 <div id="lv-output" style="background-color:' . livechat_option( "fontcolor" ) . '; color:' . livechat_option( "backgroundcolor" ) . ';"></div>

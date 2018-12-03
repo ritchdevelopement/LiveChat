@@ -2,14 +2,14 @@ th[scope="row"] {
     padding-top: 15px;
 }
 
-#db-clear {
+#chat-end {
 	background: #ef1515;
 	border-color: #ef1515 #c01616 #ef1515;
 	box-shadow: 0 1px 0 #c01616;
 	text-shadow: 0 -1px 1px #c01616,1px 0 1px #c01616,0 1px 1px #c01616,-1px 0 1px #c01616; 
 }
 
-#db-clear:hover {
+#chat-end:hover {
     background: #ef1515cc;
 }
 

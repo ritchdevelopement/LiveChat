@@ -7,12 +7,7 @@ jQuery(document).ready(function() {
     var sendInput = document.querySelector("#lv-input");
     var chatOutput = document.querySelector("#lv-output");
     
-    window.addEventListener("unload", function () {
-        userOnline = 0;
-        sendMessage();
-    });
-
-    window.addEventListener("beforeunload", function () {
+    window.addEventListener('beforeunload', function () {
         userOnline = 0;
         sendMessage();
     });
@@ -51,7 +46,7 @@ jQuery(document).ready(function() {
     }
 
     function getMessages() {
-        jQuery.post(livechat_script.ajaxurl, data = {
+        jQuery.get(livechat_script.ajaxurl, data = {
             'action': 'readMessages',
         }, 
         function(response) {
@@ -64,9 +59,11 @@ jQuery(document).ready(function() {
             }
         });        
     }
-
+    
     setInterval(function() {
-        getMessages();
+        if(userOnline == 1) {
+            getMessages();
+        }
     }, chatRefresh);
 
 });

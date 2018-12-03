@@ -1,12 +1,12 @@
 jQuery(document).ready(function() {
     var chatRefresh = 250;
     var checkUserRefresh = 1000;
-    var dbClear = document.querySelector("#db-clear");
+    var endChatButton = document.querySelector("#chat-end");
     var inputMessage = document.querySelector("#message-input");
     var chatuser = document.querySelector("#chatuser");
 
-    dbClear.onclick = function() {
-        clearDB();
+    endChatButton.onclick = function() {
+        endChat();
     }
 	
 	inputMessage.onkeyup = function(e) {
@@ -15,9 +15,9 @@ jQuery(document).ready(function() {
         }
     }
 
-    function clearDB () {
+    function endChat () {
         jQuery.post(livechat_script.ajaxurl, data = {
-            'action': 'clearDatabase',
+            'action': 'endChat',
         }, 
         function(response) {
             alert(response);
@@ -43,7 +43,7 @@ jQuery(document).ready(function() {
     function getMessages() {
         var lcHistory = document.querySelector("#chat-history");
 
-        jQuery.post(livechat_script.ajaxurl, data = {
+        jQuery.get(livechat_script.ajaxurl, data = {
             'action': 'readMessages',
         }, 
         function(response) {
@@ -58,7 +58,7 @@ jQuery(document).ready(function() {
     }
 
     function checkUserOnline() {
-        jQuery.post(livechat_script.ajaxurl, data = {
+        jQuery.get(livechat_script.ajaxurl, data = {
             'action': 'checkUserOnline',
         }, 
         function(response) {
@@ -81,6 +81,8 @@ jQuery(document).ready(function() {
     }, checkUserRefresh);
 
     setInterval(function() {
-        getMessages();
+        if(document.querySelector("#vistitoronline").innerHTML == "Ja") {
+            getMessages();
+        }
     }, chatRefresh);
 });

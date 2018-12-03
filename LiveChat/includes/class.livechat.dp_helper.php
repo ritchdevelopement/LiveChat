@@ -13,7 +13,7 @@ class DB_Helper {
         if( self::$db_helper == null ) {
             self::$db_helper = new DB_Helper();
         }
-        return  self::$db_helper;
+        return self::$db_helper;
     }
 
     function writeMessage() {
@@ -25,12 +25,11 @@ class DB_Helper {
         $message = substr($_POST["message"], 0, 255);
         $useronline = $_POST["useronline"];
         $usersession = session_id();
-        $userip = get_client_ip_env();
+        $userip = hash('sha256', get_client_ip_env());
 
-        $chatuserEscaped = htmlentities(mysqli_real_escape_string($this->db, $chatuser));
         $messageEscaped = htmlentities(mysqli_real_escape_string($this->db, $message));
 
-        $query = "INSERT INTO wp_livechat (chatuser, message, useronline, usersession, userip) VALUES ('$chatuserEscaped', '$messageEscaped', '$useronline', '$usersession', '$userip')";
+        $query = "INSERT INTO wp_livechat (chatuser, message, useronline, usersession, userip) VALUES ('$chatuser', '$messageEscaped', '$useronline', '$usersession', '$userip')";
 
         if ( $this->db->real_query($query) ) {
             echo "Nachricht in Datenbank gespeichert";
@@ -76,7 +75,7 @@ class DB_Helper {
             echo "Verbindung zur Datenbank konnte nicht hergestellt werden: (" . $this->db->connect_errno . ") " . $this->db->connect_error;
         }
         
-        $query = "SELECT * FROM wp_livechat ORDER BY time DESC LIMIT 1";
+        $query = "SELECT useronline FROM wp_livechat ORDER BY time DESC LIMIT 1";
 
         if ( $this->db->real_query($query) ) {
             $res = $this->db->use_result();
@@ -100,7 +99,7 @@ class DB_Helper {
             echo "Verbindung zur Datenbank konnte nicht hergestellt werden: (" . $this->db->connect_errno . ") " . $this->db->connect_error;
         }
         
-        $query = "SELECT * FROM wp_livechat WHERE chatuser = 'Visitor' ORDER BY time DESC LIMIT 1";
+        $query = "SELECT useronline, usersession, userip FROM wp_livechat ORDER BY time DESC LIMIT 1";
 
         if ( $this->db->real_query($query) ) {
             $res = $this->db->use_result();
@@ -110,7 +109,7 @@ class DB_Helper {
                 $usersession = $row["usersession"];
                 $userip = $row["userip"];
                 
-                if( ( $useronline == 1 && $usersession == session_id() && $userip == get_client_ip_env() ) || $useronline == 0 ) {
+                if( ( $useronline == 1 && $usersession == session_id() && $userip == hash('sha256', get_client_ip_env()) ) || $useronline == 0 ) {
                    return true;
                 } else {
                     return false;
@@ -122,15 +121,15 @@ class DB_Helper {
         }
     }
 
-    function clearDatabase() {
+    function endChat() {
         if ( $this->db->connect_errno ) {
             echo "Verbindung zur Datenbank konnte nicht hergestellt werden: (" . $this->db->connect_errno . ") " . $this->db->connect_error;
         }
         
-        $query = "DELETE FROM wp_livechat WHERE id > 1";
+        $query = "INSERT INTO wp_livechat SET useronline = 0, message = '', chatuser = 'Employee'";
 
         if ( $this->db->real_query($query) ) {
-            echo "Chatverlauf erfolgreich gelöscht";
+            echo "Chat erfolgreich beendet";
         } else {
             echo "Ein Fehler ist aufgetreten";
             echo $this->db->errno;
